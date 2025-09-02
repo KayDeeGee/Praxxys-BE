@@ -13,6 +13,7 @@ const editDialogVisible = ref(false)
 const deleteDialogVisible = ref(false)
 const selectedProduct = ref(null)
 const selectedCategory = ref(null)
+const searchQuery = ref('')
 
 const pagination = ref({
   current_page: 1,
@@ -59,19 +60,19 @@ const loadProducts = async (page = 1) => {
   loading.value = true
   error.value = null
   try {
-    const categoryQuery = selectedCategory.value && selectedCategory.value !== 'All' 
-      ? `&category=${encodeURIComponent(selectedCategory.value)}`
-      : ''
+    const searchString = searchQuery.value ? `&search=${searchQuery.value}` : ''
 
-    const res = await fetchPublic(`/products?page=${page}${categoryQuery}`, {
+    const categoryQuery =
+      selectedCategory.value && selectedCategory.value !== 'All'
+        ? `&category=${encodeURIComponent(selectedCategory.value)}`
+        : ''
+    
+    const res = await fetchPublic(`/products?page=${page}${searchString}${categoryQuery}`, {
       method: 'GET',
     })
 
     products.value = res.products.data
     categories.value = ['All', ...res.categories]
-    console.log(res, 'wow')
-
-    
 
     pagination.value = {
       current_page: res.products.current_page,
@@ -93,16 +94,21 @@ onMounted(() => {
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Product Page</h1>
 
-    <!-- Category Filter -->
-    <div class="p-field">
+    <!-- Query Filter -->
+    <div class="flex justify-between">
+      <div class="flex gap-2">
+        <InputText type="text" placeholder="Search name, description" v-model="searchQuery" />
+        <Button label="Search" icon="pi pi-search" @click="loadProducts(1)" />
+      </div>
       <Select
         v-model="selectedCategory"
         :options="categories"
         placeholder="Filter By Category"
-        class="w-full md:w-14rem"
+        class="md:w-14rem"
         @change="loadProducts(1)"
       />
     </div>
+    
     <!-- Loading and Error States -->
     <ProgressSpinner v-if="loading" />
     <Message v-else-if="error" severity="error" :closable="false">{{ error }}</Message>
