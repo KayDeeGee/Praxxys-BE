@@ -108,7 +108,7 @@ onMounted(() => {
         @change="loadProducts(1)"
       />
     </div>
-    
+
     <!-- Loading and Error States -->
     <ProgressSpinner v-if="loading" />
     <Message v-else-if="error" severity="error" :closable="false">{{ error }}</Message>
@@ -116,6 +116,7 @@ onMounted(() => {
     <!-- Product Table -->
     <DataTable v-else :value="products" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
       <Column field="name" header="Name"></Column>
+      <Column field="date_time" header="Date Time"></Column>
       <Column field="category" header="Category"></Column>
       <Column field="description" header="Description"></Column>
       <Column header="Actions">

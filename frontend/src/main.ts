@@ -21,6 +21,16 @@ import Tooltip from 'primevue/tooltip'
 import AutoComplete from 'primevue/autocomplete'
 import Select from 'primevue/select'
 
+import Stepper from 'primevue/stepper'
+import StepList from 'primevue/steplist'
+import StepPanels from 'primevue/steppanels'
+import StepItem from 'primevue/stepitem'
+import Step from 'primevue/step'
+import StepPanel from 'primevue/steppanel'
+import Editor from 'primevue/editor'
+import FileUpload from 'primevue/fileupload'
+import DatePicker from 'primevue/datepicker'
+
 import 'primeicons/primeicons.css'
 
 const app = createApp(App)
@@ -49,6 +59,16 @@ app.component('ProgressSpinner', ProgressSpinner)
 app.component('Image', Image)
 app.component('AutoComplete', AutoComplete)
 app.component('Select', Select)
+
+app.component('Stepper', Stepper)
+app.component('StepList', StepList)
+app.component('StepPanels', StepPanels)
+app.component('StepItem', StepItem)
+app.component('Step', Step)
+app.component('StepPanel', StepPanel)
+app.component('Editor', Editor)
+app.component('FileUpload', FileUpload)
+app.component('DatePicker', DatePicker)
 
 app.directive('tooltip', Tooltip)
 
