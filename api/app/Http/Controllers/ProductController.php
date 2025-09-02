@@ -25,9 +25,9 @@ class ProductController extends Controller
                     ->orWhere('description', 'like', "%{$search}%");
             });
         }
+        $query->orderBy('date_time', 'desc');
 
-        $categories = Product::select('category')->distinct()->pluck('category');
-
+        $categories = $this->getCategories();
         $products = $query->paginate($request->get('per_page', 5));
 
         return response()->json([
@@ -41,7 +41,37 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required|date',
+            'images' => 'required|array|min:1',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        // Save product
+        $product = Product::create([
+            'name' => $validated['name'],
+            'category' => $validated['category'],
+            'description' => $validated['description'],
+            'date_time' => $validated['date'],
+        ]);
+
+        // Save images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('products', 'public');
+                $product->images()->create([
+                    'path' => $path
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Product created successfully',
+            'data' => $product->load('images')
+        ]);
     }
 
     /**
@@ -82,5 +112,10 @@ class ProductController extends Controller
         return response()->json([
             'message' => 'Product deleted successfully',
         ], 200);
+    }
+
+    public function getCategories()
+    {
+        return Product::select('category')->distinct()->pluck('category');
     }
 }

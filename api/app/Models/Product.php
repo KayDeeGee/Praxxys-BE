@@ -16,4 +16,9 @@ class Product extends Model
         'description',
         'date_time',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
 }

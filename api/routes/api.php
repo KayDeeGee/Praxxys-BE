@@ -10,4 +10,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/product-categories', [ProductController::class, 'getCategories']);
 Route::apiResource('products', ProductController::class);
