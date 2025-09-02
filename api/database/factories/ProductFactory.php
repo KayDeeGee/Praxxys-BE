@@ -17,7 +17,10 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->words(3, true),
+            'category' => $this->faker->randomElement(['Electronics', 'Furniture', 'Clothing', 'Food']),
+            'description' => $this->faker->sentence(),
+            'date_time' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

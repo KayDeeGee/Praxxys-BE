@@ -14,5 +14,6 @@ class Product extends Model
         'name',
         'category',
         'description',
+        'date_time',
     ];
 }
