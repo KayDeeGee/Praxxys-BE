@@ -18,6 +18,14 @@ class ProductController extends Controller
             $query->where('category', $request->category);
         }
 
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
         $categories = Product::select('category')->distinct()->pluck('category');
 
         $products = $query->paginate($request->get('per_page', 5));
