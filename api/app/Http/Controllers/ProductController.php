@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -50,7 +53,6 @@ class ProductController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        // Save product
         $product = Product::create([
             'name' => $validated['name'],
             'category' => $validated['category'],
@@ -58,7 +60,6 @@ class ProductController extends Controller
             'date_time' => $validated['date'],
         ]);
 
-        // Save images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('products', 'public');
@@ -79,7 +80,14 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return response()->json([
+            'id' => $product->id,
+            'name' => $product->name,
+            'category' => $product->category,
+            'description' => $product->description,
+            'date' => $product->date_time,
+            'images' => $product->images->pluck('path'),
+        ]);
     }
 
     /**
@@ -87,17 +95,39 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // Validate incoming data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'date' => 'required|date',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'existing_images' => 'nullable|array'
         ]);
 
-        // Update product
-        $product->update($validated);
+        $product->update([
+            'name' => $validated['name'],
+            'category' => $validated['category'],
+            'description' => $validated['description'] ?? null,
+            'date_time' => $validated['date'],
+        ]);
 
-        // Return updated product
+        $existingImages = $validated['existing_images'] ?? [];
+        $product->images()->whereNotIn('path', $existingImages)->get()->each(function ($img) {
+            Storage::disk('public')->delete($img->path);
+            $img->delete();
+        });
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('products', $filename, 'public');
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path' => $path,
+                ]);
+            }
+        }
         return response()->json($product, 200);
     }
 
