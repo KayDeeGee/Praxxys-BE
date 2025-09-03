@@ -20,6 +20,7 @@ import Image from 'primevue/image'
 import Tooltip from 'primevue/tooltip'
 import AutoComplete from 'primevue/autocomplete'
 import Select from 'primevue/select'
+import Password from 'primevue/password'
 
 import Stepper from 'primevue/stepper'
 import StepList from 'primevue/steplist'
@@ -59,6 +60,7 @@ app.component('ProgressSpinner', ProgressSpinner)
 app.component('Image', Image)
 app.component('AutoComplete', AutoComplete)
 app.component('Select', Select)
+app.component('Password', Password)
 
 app.component('Stepper', Stepper)
 app.component('StepList', StepList)

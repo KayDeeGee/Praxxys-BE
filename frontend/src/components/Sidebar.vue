@@ -6,7 +6,6 @@ const router = useRouter()
 const route = useRoute()
 
 const links = [
-  { name: 'Dashboard', path: '/' },
   { name: 'Products', path: '/products' },
   { name: 'Create Product', path: '/products-create' },
   { name: 'Videos', path: '/videos' },

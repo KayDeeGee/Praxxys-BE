@@ -4,44 +4,34 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const goToLogin = () => {
-  console.log('Navigating to login...')
   router.push('/login')
 }
 </script>
 
 <template>
-  <div class="home-page">
-    <h1>You did it!</h1>
-    <p>
-      Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-      documentation
-    </p>
-    
-    <router-link to="/login">
-      <button>Login (Router Link)</button>
-    </router-link>
-    
-    <button @click="goToLogin">Login (Function)</button>
+  <div class="landing-page flex flex-col min-h-screen">
+    <section class="flex-1 flex flex-col justify-center items-center text-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4">PRAXXYS BACKEND EXAM</h1>
+      <p class="text-lg md:text-xl mb-8 max-w-2xl">
+        Product CRUD
+      </p>
+      <button 
+        @click="goToLogin"
+        class="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition"
+      >
+        Log In
+      </button>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-6 text-center">
+      <p> By: Kyle Bryan D. Basco</p>
+    </footer>
   </div>
 </template>
 
 <style scoped>
-.home-page {
-  padding: 2rem;
-  text-align: center;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
+.landing-page {
+  font-family: 'Inter', sans-serif;
 }
 </style>

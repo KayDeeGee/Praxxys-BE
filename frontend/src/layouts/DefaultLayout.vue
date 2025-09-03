@@ -1,6 +1,6 @@
 <template>
     <div>
-wow
+      <router-view />
     </div>
 </template>
 
