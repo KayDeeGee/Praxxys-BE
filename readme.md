@@ -19,6 +19,7 @@
     -   reconfigure env copy
     -   php artisan migrate --seed
     -   php artisan serve
+    -   php artisan storage:link (for file uploads)
 -   cd frontend (vue)
     -   npm install
     -   npm run dev
