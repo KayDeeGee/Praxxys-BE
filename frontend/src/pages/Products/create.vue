@@ -146,7 +146,7 @@ onMounted(async () => {
         <Step value="3">Date And Time</Step>
       </StepList>
 
-      <StepPanels>
+      <StepPanels class="p-5">
         <!-- STEP 1 -->
         <StepPanel v-slot="{ activateCallback }" value="1">
           <div class="flex flex-col gap-4">
