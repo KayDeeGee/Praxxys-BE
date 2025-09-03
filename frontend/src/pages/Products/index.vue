@@ -11,7 +11,6 @@ const categories = ref([])
 const loading = ref(true)
 const error = ref(null)
 
-// const editDialogVisible = ref(false)
 const deleteDialogVisible = ref(false)
 const selectedProduct = ref(null)
 const selectedCategory = ref(null)
@@ -22,10 +21,7 @@ const pagination = ref({
   last_page: 1,
 })
 
-// const editProduct = (product) => {
-//   selectedProduct.value = { ...product }
-//   editDialogVisible.value = true
-// }
+
 const goToEdit = (product) => {
   const id = product.id
   router.push(`/products/${id}/edit`)
@@ -35,20 +31,6 @@ const deleteProduct = (product) => {
   selectedProduct.value = product
   deleteDialogVisible.value = true
 }
-
-// const confirmEdit = async () => {
-//   try {
-//     const res = await fetchWithCsrf(`/products/${selectedProduct.value.id}`, {
-//       method: 'PUT',
-//       body: JSON.stringify(selectedProduct.value),
-//     })
-//     console.log(res)
-//     loadProducts()
-//     editDialogVisible.value = false
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
 
 const confirmDelete = async () => {
   try {
@@ -74,7 +56,7 @@ const loadProducts = async (page = 1) => {
         ? `&category=${encodeURIComponent(selectedCategory.value)}`
         : ''
 
-    const res = await fetchPublic(`/products?page=${page}${searchString}${categoryQuery}`, {
+    const res = await fetchWithCsrf(`/products?page=${page}${searchString}${categoryQuery}`, {
       method: 'GET',
     })
 

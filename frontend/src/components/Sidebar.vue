@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useApi } from '@/composables/useApi'
+
+const { fetchWithCsrf } = useApi()
 
 const router = useRouter()
 const route = useRoute()
@@ -12,6 +15,15 @@ const links = [
 ]
 
 const isActive = (path) => route.path === path
+
+const logout = async () => {
+  try {
+    await fetchWithCsrf('/logout', { method: 'POST' }) 
+    router.push('/') 
+  } catch (err) {
+    console.error('Logout failed:', err)
+  }
+}
 </script>
 
 <template>
@@ -31,6 +43,9 @@ const isActive = (path) => route.path === path
         ]"
       >
         {{ link.name }}
+      </button>
+       <button @click="logout" class="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded text-white">
+        Logout
       </button>
     </nav>
   </aside>

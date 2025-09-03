@@ -28,6 +28,7 @@
     "primevue": "^4.3.8",
     "quill": "^2.0.3",
     "tailwindcss": "^4.1.12",
+    "video.js": "^8.23.4",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },
