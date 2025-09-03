@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { fetchWithCsrf, fetchPublic } = useApi()
 
 const products = ref([])
@@ -9,7 +11,7 @@ const categories = ref([])
 const loading = ref(true)
 const error = ref(null)
 
-const editDialogVisible = ref(false)
+// const editDialogVisible = ref(false)
 const deleteDialogVisible = ref(false)
 const selectedProduct = ref(null)
 const selectedCategory = ref(null)
@@ -20,28 +22,33 @@ const pagination = ref({
   last_page: 1,
 })
 
-const editProduct = (product) => {
-  selectedProduct.value = { ...product }
-  editDialogVisible.value = true
+// const editProduct = (product) => {
+//   selectedProduct.value = { ...product }
+//   editDialogVisible.value = true
+// }
+const goToEdit = (product) => {
+  const id = product.id
+  router.push(`/products/${id}/edit`)
 }
+
 const deleteProduct = (product) => {
   selectedProduct.value = product
   deleteDialogVisible.value = true
 }
 
-const confirmEdit = async () => {
-  try {
-    const res = await fetchWithCsrf(`/products/${selectedProduct.value.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(selectedProduct.value),
-    })
-    console.log(res)
-    loadProducts()
-    editDialogVisible.value = false
-  } catch (err) {
-    console.error(err)
-  }
-}
+// const confirmEdit = async () => {
+//   try {
+//     const res = await fetchWithCsrf(`/products/${selectedProduct.value.id}`, {
+//       method: 'PUT',
+//       body: JSON.stringify(selectedProduct.value),
+//     })
+//     console.log(res)
+//     loadProducts()
+//     editDialogVisible.value = false
+//   } catch (err) {
+//     console.error(err)
+//   }
+// }
 
 const confirmDelete = async () => {
   try {
@@ -66,7 +73,7 @@ const loadProducts = async (page = 1) => {
       selectedCategory.value && selectedCategory.value !== 'All'
         ? `&category=${encodeURIComponent(selectedCategory.value)}`
         : ''
-    
+
     const res = await fetchPublic(`/products?page=${page}${searchString}${categoryQuery}`, {
       method: 'GET',
     })
@@ -121,7 +128,7 @@ onMounted(() => {
       <Column field="description" header="Description"></Column>
       <Column header="Actions">
         <template #body="{ data }">
-          <Button label="Edit" @click="editProduct(data)" class="mr-2" />
+          <Button label="Edit" @click="goToEdit(data)" />
           <Button label="Delete" severity="danger" @click="deleteProduct(data)" />
         </template>
       </Column>
@@ -149,35 +156,6 @@ onMounted(() => {
         </div>
       </template>
     </DataTable>
-
-    <!-- Edit Modal -->
-    <Dialog
-      header="Edit Product"
-      v-model:visible="editDialogVisible"
-      :modal="true"
-      :closable="true"
-    >
-      <div class="flex flex-col gap-3">
-        <label>Name</label>
-        <InputText v-model="selectedProduct.name" />
-
-        <label>Category</label>
-        <InputText v-model="selectedProduct.category" />
-
-        <label>Description</label>
-        <Textarea v-model="selectedProduct.description" rows="4" />
-      </div>
-
-      <template #footer>
-        <Button
-          label="Cancel"
-          icon="pi pi-times"
-          @click="editDialogVisible = false"
-          class="p-button-text"
-        />
-        <Button label="Save" icon="pi pi-check" @click="confirmEdit" />
-      </template>
-    </Dialog>
 
     <!-- Delete Modal -->
     <Dialog
